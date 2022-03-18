@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-add-code-language",
+	"name": "Add Code Language",
+	"version": "1.0.1",
+	"minAppVersion": "0.12.0",
+	"description": "Add languages for code blocks",
+	"author": "Yu Wang",
+	"authorUrl": "https://github.com/anselmwang",
+	"isDesktopOnly": false
+}
