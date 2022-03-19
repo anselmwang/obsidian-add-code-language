@@ -2,7 +2,7 @@ import { App, Editor, FuzzySuggestModal, Notice, Plugin } from 'obsidian';
 
 let LANGUAGES: string[] = [];
 
-const GUESS_LANG_2_CODE_BLOCK_LANG_MAPPING = {
+const GUESS_LANG_2_CODE_BLOCK_LANG_MAPPING: {[key: string]: string} = {
 	"JavaScript": "javascript",
 	"TypeScript": "typescript",
 	"Python": "python",
