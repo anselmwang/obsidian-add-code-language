@@ -34,7 +34,8 @@ export class SelectLanguageModel extends FuzzySuggestModal<string> {
 	}
 }
 
-const CODE_BLOCK_RE = /```(\w*)\n(.*?)```/gs;
+// const CODE_BLOCK_RE = /```(\w*)\n(.*?)```/gs;
+const CODE_BLOCK_RE = /(^\s*```)(\w*)\n(.*?)(^\s*```)/gms;
 export default class AddCodeLanguagePlugin extends Plugin {
 	async load_languages() {
 		const lines = await this.app.vault.adapter.read(".obsidian/plugins/obsidian-add-code-language/languages.txt");
@@ -90,7 +91,7 @@ export default class AddCodeLanguagePlugin extends Plugin {
 
 				const language_from_guesslang = filtered_scores[0][0] as string;
 				const language = GUESS_LANG_2_CODE_BLOCK_LANG_MAPPING[language_from_guesslang];
-				const new_full_block = "```" + language + "\n" + code + "```";
+				const new_full_block = current_code_block.start_tag + language + "\n" + code + current_code_block.end_tag;
 				editor.replaceRange(new_full_block, editor_start_pos,
 					editor_end_pos);
 			}
@@ -109,15 +110,17 @@ export default class AddCodeLanguagePlugin extends Plugin {
 		console.log(`cur_pos: ${cur_pos}`);
 		for (const match of content.matchAll(CODE_BLOCK_RE)) {
 			const full_block = match[0];
-			// const current_language = match[1];
-			const code = match[2];
+			const code = match[3];
 			const start_pos = match.index;
 			const end_pos = match.index + full_block.length;
 			console.log(`start_pos: ${start_pos}, end_pos: ${end_pos}`);
+			console.log(`code: ${code}`)
 			if (start_pos <= cur_pos && end_pos >= cur_pos && LANGUAGES.length != 0) {
 				return {
 					editor_start_pos: editor.offsetToPos(start_pos),
 					editor_end_pos: editor.offsetToPos(end_pos),
+					start_tag: match[1],
+					end_tag: match[4],
 					code
 				}
 			}
